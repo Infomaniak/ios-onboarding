@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SlideCollectionViewCell" id="8RI-71-M2Z" customClass="SlideCollectionViewCell" customModule="InfomaniakOnboarding">
+            <rect key="frame" x="0.0" y="0.0" width="1101" height="1019"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Gum-k9-2CA">
+                <rect key="frame" x="0.0" y="0.0" width="1101" height="1019"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DEY-t0-NKr">
+                        <rect key="frame" x="0.0" y="0.0" width="1101" height="642.5"/>
+                        <variation key="heightClass=compact-widthClass=compact" hidden="YES"/>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YFR-mx-qwx">
+                        <rect key="frame" x="0.0" y="0.0" width="1101" height="642.5"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="6iF-zE-Ma6">
+                                <rect key="frame" x="8" y="152" width="1085" height="490.5"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KEJ-sM-6SA" customClass="LottieAnimationView" customModule="Lottie">
+                                        <rect key="frame" x="0.0" y="0.0" width="1085" height="331.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <variation key="heightClass=compact-widthClass=compact" hidden="YES"/>
+                                    </view>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yTZ-gy-GqV">
+                                        <rect key="frame" x="0.0" y="331.5" width="1085" height="159"/>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="6iF-zE-Ma6" secondAttribute="bottom" id="Jp4-9X-heF"/>
+                            <constraint firstItem="6iF-zE-Ma6" firstAttribute="leading" secondItem="YFR-mx-qwx" secondAttribute="leadingMargin" id="Re2-kd-kp9"/>
+                            <constraint firstItem="6iF-zE-Ma6" firstAttribute="top" secondItem="YFR-mx-qwx" secondAttribute="topMargin" constant="96" id="oEX-aB-d8H"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="6iF-zE-Ma6" secondAttribute="trailing" id="y3h-hG-frJ"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ty4-zD-olM">
+                        <rect key="frame" x="36" y="642.5" width="1029" height="336.5"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstItem="Ty4-zD-olM" firstAttribute="top" secondItem="YFR-mx-qwx" secondAttribute="bottom" id="1PJ-8N-xLz"/>
+                    <constraint firstAttribute="bottom" secondItem="Ty4-zD-olM" secondAttribute="bottom" constant="40" id="ALq-pu-s1k"/>
+                    <constraint firstItem="DEY-t0-NKr" firstAttribute="leading" secondItem="Gum-k9-2CA" secondAttribute="leading" id="DNN-Fu-31u"/>
+                    <constraint firstItem="Ty4-zD-olM" firstAttribute="trailing" secondItem="Gum-k9-2CA" secondAttribute="trailingMargin" constant="-16" id="EpR-aW-XfO"/>
+                    <constraint firstItem="YFR-mx-qwx" firstAttribute="top" secondItem="Gum-k9-2CA" secondAttribute="top" id="Gl4-Ds-eo3"/>
+                    <constraint firstItem="Ty4-zD-olM" firstAttribute="leading" secondItem="Gum-k9-2CA" secondAttribute="leadingMargin" constant="16" id="XYN-n3-qBc"/>
+                    <constraint firstItem="Ty4-zD-olM" firstAttribute="top" secondItem="DEY-t0-NKr" secondAttribute="bottom" id="Yry-A4-5nh"/>
+                    <constraint firstAttribute="trailing" secondItem="DEY-t0-NKr" secondAttribute="trailing" id="cTx-rG-Bzo"/>
+                    <constraint firstItem="Ty4-zD-olM" firstAttribute="height" secondItem="Gum-k9-2CA" secondAttribute="height" multiplier="0.33" id="ehc-Tj-bRg"/>
+                    <constraint firstItem="YFR-mx-qwx" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Gum-k9-2CA" secondAttribute="leading" id="f2C-Fd-Yyo"/>
+                    <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="YFR-mx-qwx" secondAttribute="trailing" id="my1-Lf-NVb"/>
+                    <constraint firstItem="DEY-t0-NKr" firstAttribute="top" secondItem="Gum-k9-2CA" secondAttribute="top" id="n3m-f8-Iw0"/>
+                    <constraint firstItem="YFR-mx-qwx" firstAttribute="centerX" secondItem="Gum-k9-2CA" secondAttribute="centerX" id="uCK-CQ-Z49"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <size key="customSize" width="1051" height="849"/>
+            <connections>
+                <outlet property="backgroundImageView" destination="DEY-t0-NKr" id="LYc-Pz-tij"/>
+                <outlet property="bottomView" destination="Ty4-zD-olM" id="qeJ-Rg-LwD"/>
+                <outlet property="illustrationAnimationView" destination="KEJ-sM-6SA" id="Pa9-zu-ppR"/>
+                <outlet property="illustrationImageView" destination="yTZ-gy-GqV" id="Vhw-xq-aAe"/>
+            </connections>
+            <point key="canvasLocation" x="870.28985507246387" y="207.25446428571428"/>
+        </collectionViewCell>
+    </objects>
+</document>
