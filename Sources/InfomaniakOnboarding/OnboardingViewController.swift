@@ -21,9 +21,20 @@ import UIKit
 
 public protocol OnboardingViewControllerDelegate: AnyObject {
     func currentIndexChanged(newIndex: Int)
-    func bottomViewForIndex(_ index: Int) -> UIView?
+    func bottomUIViewForIndex(_ index: Int) -> UIView?
+    func bottomViewForIndex(_ index: Int) -> (any View)?
     func shouldAnimateBottomViewForIndex(_ index: Int) -> Bool
     func willDisplaySlideViewCell(_ slideViewCell: SlideCollectionViewCell, at index: Int)
+}
+
+public extension OnboardingViewControllerDelegate {
+    func bottomUIViewForIndex(_ index: Int) -> UIView? {
+        return nil
+    }
+
+    func bottomViewForIndex(_ index: Int) -> (any View)? {
+        return nil
+    }
 }
 
 public class OnboardingViewController: UIViewController {
@@ -110,10 +121,21 @@ public class OnboardingViewController: UIViewController {
         slideCarouselViewController.setSelectedSlide(index: index)
     }
 
+    func resolveBottomView(newSlideIndex: Int) -> UIView {
+        if let uiView = delegate?.bottomUIViewForIndex(newSlideIndex) {
+            return uiView
+        } else if let view = delegate?.bottomViewForIndex(newSlideIndex) {
+            let controller = UIHostingController(rootView: AnyView(view))
+            return controller.view
+        } else {
+            return UIView(frame: .zero)
+        }
+    }
+
     func onSlideChanged(newSlideIndex: Int) {
         let oldBottomView = bottomContainerView.subviews.last
 
-        let newBottomView = delegate?.bottomViewForIndex(newSlideIndex) ?? UIView(frame: .zero)
+        let newBottomView = resolveBottomView(newSlideIndex: newSlideIndex)
         newBottomView.translatesAutoresizingMaskIntoConstraints = false
 
         if delegate?.shouldAnimateBottomViewForIndex(newSlideIndex) ?? false {

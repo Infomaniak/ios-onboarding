@@ -43,7 +43,7 @@ struct OnboardingView: UIViewControllerRepresentable {
                                                           lottieConfiguration: LottieConfiguration(
                                                               renderingEngine: .mainThread
                                                           ))),
-                bottomViewController: UIHostingController(rootView: Text("Choisissez votre thème"))
+                bottomView: Text("Choisissez votre thème")
             ),
             Slide(
                 backgroundImage: .onboardingBackground2,
@@ -56,10 +56,10 @@ struct OnboardingView: UIViewControllerRepresentable {
                     loopFrameEnd: 253,
                     lottieConfiguration: LottieConfiguration(renderingEngine: .mainThread)
                 )),
-                bottomViewController: UIHostingController(rootView: VStack {
+                bottomView: VStack {
                     Text("Gagnez du temps avec les actions de balayage")
                     Text("Personnalisez librement vos raccourcis dans les paramètres de l'app.")
-                })
+                }
             ),
             Slide(
                 backgroundImage: .onboardingBackground3,
@@ -72,10 +72,10 @@ struct OnboardingView: UIViewControllerRepresentable {
                     loopFrameEnd: 187,
                     lottieConfiguration: LottieConfiguration(renderingEngine: .mainThread)
                 )),
-                bottomViewController: UIHostingController(rootView: VStack {
+                bottomView: VStack {
                     Text("Appuyez quelques secondes sur un message pour en sélectionner plusieurs")
                     Text("Archivez, supprimez, déplacez ou mettez en favoris plusieurs messages en une fois.")
-                })
+                }
             ),
             Slide(
                 backgroundImage: .onboardingBackground4,
@@ -88,10 +88,10 @@ struct OnboardingView: UIViewControllerRepresentable {
                     loopFrameEnd: 236,
                     lottieConfiguration: LottieConfiguration(renderingEngine: .mainThread)
                 )),
-                bottomViewController: UIHostingController(rootView: VStack {
+                bottomView: VStack {
                     Text("Lancez vous !")
                     Text("Créez une adresse gratuite ou connectez-vous à un compte Infomaniak existant.")
-                })
+                }
             )
         ]
 
@@ -120,13 +120,11 @@ struct OnboardingView: UIViewControllerRepresentable {
 
         func willDisplaySlideViewCell(_ slideViewCell: SlideCollectionViewCell, at index: Int) {}
 
-        func bottomViewForIndex(_ index: Int) -> UIView? {
+        func bottomViewForIndex(_ index: Int) -> (any View)? {
             if index == 3 {
-                let controller = UIHostingController(rootView: Text("Last"))
-                return controller.view
+                return Text("Last")
             } else {
-                let controller = UIHostingController(rootView: Text("Coucou"))
-                return controller.view
+                return Text("Coucou")
             }
         }
 

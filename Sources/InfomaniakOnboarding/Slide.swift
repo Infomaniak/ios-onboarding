@@ -17,6 +17,7 @@
  */
 
 import Lottie
+import SwiftUI
 import UIKit
 
 public enum SlideContent {
@@ -44,5 +45,17 @@ public struct Slide {
         self.backgroundImageTintColor = backgroundImageTintColor
         self.content = content
         self.bottomViewController = bottomViewController
+    }
+
+    public init(
+        backgroundImage: UIImage,
+        backgroundImageTintColor: UIColor?,
+        content: SlideContent,
+        bottomView: some View
+    ) {
+        self.backgroundImage = backgroundImage
+        self.backgroundImageTintColor = backgroundImageTintColor
+        self.content = content
+        bottomViewController = UIHostingController(rootView: bottomView)
     }
 }
