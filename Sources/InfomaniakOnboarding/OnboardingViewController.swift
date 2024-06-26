@@ -94,6 +94,20 @@ public class OnboardingViewController: UIViewController {
                 headerImageView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -48)
             ])
         }
+        if let dismissAction = configuration.dismissHandler {
+            let closeButton = UIButton(type: .custom)
+            closeButton.translatesAutoresizingMaskIntoConstraints = false
+            closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+            closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+            view.addSubview(closeButton)
+
+            NSLayoutConstraint.activate([
+                closeButton.widthAnchor.constraint(equalToConstant: 40),
+                closeButton.heightAnchor.constraint(equalToConstant: 40),
+                closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+                closeButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)
+            ])
+        }
 
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -163,5 +177,9 @@ public class OnboardingViewController: UIViewController {
 
     func willDisplaySlideViewCell(_ slideViewCell: SlideCollectionViewCell, at index: Int) {
         delegate?.willDisplaySlideViewCell(slideViewCell, at: index)
+    }
+
+    @objc func didTapCloseButton() {
+        configuration.dismissHandler?()
     }
 }
