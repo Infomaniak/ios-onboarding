@@ -19,7 +19,7 @@
 import SwiftUI
 
 public struct OnboardingConfiguration {
-    /// The image dispalyed at the top of the view, usually the app logo
+    /// The image displayed at the top of the view, usually the app logo
     public let headerImage: UIImage?
     /// The slides to be displayed
     public let slides: [Slide]
@@ -28,15 +28,21 @@ public struct OnboardingConfiguration {
     /// Allow or not the slides to scroll
     public let isScrollEnabled: Bool
 
+    /// Action to perform when the close button is tapped
+    /// The button is only displayed when the handler is not nil
+    public let dismissHandler: (() -> Void)?
+
     public init(
         headerImage: UIImage?,
         slides: [Slide],
         pageIndicatorColor: UIColor?,
-        isScrollEnabled: Bool
+        isScrollEnabled: Bool,
+        dismissHandler: (() -> Void)?
     ) {
         self.headerImage = headerImage
         self.slides = slides
         self.pageIndicatorColor = pageIndicatorColor
         self.isScrollEnabled = isScrollEnabled
+        self.dismissHandler = dismissHandler
     }
 }
