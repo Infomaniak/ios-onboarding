@@ -60,6 +60,7 @@ public class OnboardingViewController: UIViewController {
         slideCarouselViewController = SlideCarouselViewController(
             slides: configuration.slides,
             pageIndicatorColor: configuration.pageIndicatorColor
+            isPageIndicatorHidden: configuration.isPageIndicatorHidden
         )
         self.configuration = configuration
         if let headerImage = configuration.headerImage {
