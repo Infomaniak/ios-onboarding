@@ -27,6 +27,8 @@ public struct OnboardingConfiguration {
     public let pageIndicatorColor: UIColor?
     /// Allow or not the slides to scroll
     public let isScrollEnabled: Bool
+    /// Show or hide points on slides
+    public let isPageIndicatorHidden: Bool
 
     /// Action to perform when the close button is tapped
     /// The button is only displayed when the handler is not nil
@@ -37,12 +39,14 @@ public struct OnboardingConfiguration {
         slides: [Slide],
         pageIndicatorColor: UIColor?,
         isScrollEnabled: Bool,
-        dismissHandler: (() -> Void)?
+        dismissHandler: (() -> Void)?,
+        isPageIndicatorHidden: Bool
     ) {
         self.headerImage = headerImage
         self.slides = slides
         self.pageIndicatorColor = pageIndicatorColor
         self.isScrollEnabled = isScrollEnabled
         self.dismissHandler = dismissHandler
+        self.isPageIndicatorHidden = isPageIndicatorHidden
     }
 }
