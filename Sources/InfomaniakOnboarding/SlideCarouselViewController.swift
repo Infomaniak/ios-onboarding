@@ -51,9 +51,9 @@ class SlideCarouselViewController: UICollectionViewController {
 
         pageIndicator = UIPageControl(frame: .zero)
         if !isPageIndicatorHidden {
-                    pageIndicator.numberOfPages = slides.count
-                    pageIndicator.pageIndicatorTintColor = .systemGray4
-                    pageIndicator.currentPageIndicatorTintColor = pageIndicatorColor
+            pageIndicator.numberOfPages = slides.count
+            pageIndicator.pageIndicatorTintColor = .systemGray4
+            pageIndicator.currentPageIndicatorTintColor = pageIndicatorColor
         }
 
         super.init(collectionViewLayout: layout)
