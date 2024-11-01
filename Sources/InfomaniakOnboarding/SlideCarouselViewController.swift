@@ -26,6 +26,7 @@ class SlideCarouselViewController: UICollectionViewController {
 
     let slides: [Slide]
     let pageIndicator: UIPageControl
+    let isPageIndicatorHidden: Bool
 
     var onSlideChanged: ((Int) -> Void)?
     var willDisplaySlideViewCell: ((SlideCollectionViewCell, Int) -> Void)?
@@ -41,17 +42,19 @@ class SlideCarouselViewController: UICollectionViewController {
         }
     }
 
-    init(slides: [Slide], pageIndicatorColor: UIColor?) {
+    init(slides: [Slide], pageIndicatorColor: UIColor?, isPageIndicatorHidden: Bool) {
         self.slides = slides
-
+        self.isPageIndicatorHidden = isPageIndicatorHidden
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInsetReference = .fromContentInset
 
         pageIndicator = UIPageControl(frame: .zero)
-        pageIndicator.numberOfPages = slides.count
-        pageIndicator.pageIndicatorTintColor = .systemGray4
-        pageIndicator.currentPageIndicatorTintColor = pageIndicatorColor
+        if !isPageIndicatorHidden {
+            pageIndicator.numberOfPages = slides.count
+            pageIndicator.pageIndicatorTintColor = .systemGray4
+            pageIndicator.currentPageIndicatorTintColor = pageIndicatorColor
+        }
 
         super.init(collectionViewLayout: layout)
         collectionView.register(
