@@ -126,7 +126,7 @@ class SlideCarouselViewController: UICollectionViewController {
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let pageIndex = round(scrollView.contentOffset.x / view.frame.width)
 
-        guard pageIndex.isNormal else { return }
+        guard !pageIndex.isNaN, pageIndex >= 0 else { return }
 
         currentSlideIndex = Int(pageIndex)
     }
