@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -24,24 +24,28 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YFR-mx-qwx">
                         <rect key="frame" x="0.0" y="0.0" width="1101" height="629"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yTZ-gy-GqV">
+                                <rect key="frame" x="165" y="96" width="771" height="533"/>
+                            </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="6iF-zE-Ma6">
                                 <rect key="frame" x="8" y="152" width="1085" height="477"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KEJ-sM-6SA" customClass="LottieAnimationView" customModule="Lottie">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KEJ-sM-6SA" customClass="LottieAnimationView" customModule="Lottie">
                                         <rect key="frame" x="0.0" y="0.0" width="1085" height="477"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <variation key="heightClass=compact-widthClass=compact" hidden="YES"/>
                                     </view>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yTZ-gy-GqV">
-                                        <rect key="frame" x="0.0" y="477" width="1085" height="0.0"/>
-                                    </imageView>
                                 </subviews>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="yTZ-gy-GqV" firstAttribute="centerX" secondItem="YFR-mx-qwx" secondAttribute="centerX" id="0ac-BD-7Wv"/>
                             <constraint firstAttribute="bottom" secondItem="6iF-zE-Ma6" secondAttribute="bottom" id="Jp4-9X-heF"/>
                             <constraint firstItem="6iF-zE-Ma6" firstAttribute="leading" secondItem="YFR-mx-qwx" secondAttribute="leadingMargin" id="Re2-kd-kp9"/>
+                            <constraint firstAttribute="bottom" secondItem="yTZ-gy-GqV" secondAttribute="bottom" id="eJE-F5-6T3"/>
+                            <constraint firstItem="yTZ-gy-GqV" firstAttribute="width" secondItem="YFR-mx-qwx" secondAttribute="width" multiplier="0.7" id="gnk-oc-y81"/>
+                            <constraint firstItem="yTZ-gy-GqV" firstAttribute="top" secondItem="YFR-mx-qwx" secondAttribute="top" constant="96" id="kbV-M4-s6A"/>
                             <constraint firstItem="6iF-zE-Ma6" firstAttribute="top" secondItem="YFR-mx-qwx" secondAttribute="topMargin" constant="96" id="oEX-aB-d8H"/>
                             <constraint firstAttribute="trailingMargin" secondItem="6iF-zE-Ma6" secondAttribute="trailing" id="y3h-hG-frJ"/>
                         </constraints>
