@@ -19,6 +19,7 @@
 import SwiftUI
 import UIKit
 
+@MainActor
 public protocol OnboardingViewControllerDelegate: AnyObject {
     func currentIndexChanged(newIndex: Int)
     func bottomUIViewForIndex(_ index: Int) -> UIView?
@@ -95,7 +96,8 @@ public class OnboardingViewController: UIViewController {
                 headerImageView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -48)
             ])
         }
-        if let dismissAction = configuration.dismissHandler {
+
+        if configuration.dismissHandler != nil {
             let closeButton = UIButton(type: .system)
             closeButton.translatesAutoresizingMaskIntoConstraints = false
             closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)

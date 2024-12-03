@@ -20,7 +20,7 @@ import Foundation
 import Lottie
 import UIKit
 
-public struct IKLottieConfiguration {
+@frozen public struct IKLottieConfiguration {
     public let id: Int
     public let filename: String
     public let bundle: Bundle

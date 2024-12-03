@@ -25,6 +25,7 @@ public enum SlideContent {
     case animation(IKLottieConfiguration)
 }
 
+@MainActor
 public struct Slide {
     /// An image displayed behind the main illustration (usually a wave)
     public let backgroundImage: UIImage

@@ -18,7 +18,7 @@
 
 import SwiftUI
 
-public struct OnboardingConfiguration {
+@frozen public struct OnboardingConfiguration {
     /// The image displayed at the top of the view, usually the app logo
     public let headerImage: UIImage?
     /// The slides to be displayed
