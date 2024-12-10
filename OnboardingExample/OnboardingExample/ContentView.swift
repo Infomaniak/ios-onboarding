@@ -99,7 +99,9 @@ struct OnboardingView: UIViewControllerRepresentable {
             headerImage: .logoText,
             slides: slides,
             pageIndicatorColor: UIColor(Color.accentColor),
-            isScrollEnabled: true
+            isScrollEnabled: true,
+            dismissHandler: {},
+            isPageIndicatorHidden: true
         )
 
         let controller = OnboardingViewController(configuration: configuration)

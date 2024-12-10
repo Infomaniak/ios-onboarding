@@ -18,7 +18,7 @@
 
 import SwiftUI
 
-@frozen public struct OnboardingConfiguration {
+public struct OnboardingConfiguration: Sendable {
     /// The image displayed at the top of the view, usually the app logo
     public let headerImage: UIImage?
     /// The slides to be displayed
@@ -32,14 +32,14 @@ import SwiftUI
 
     /// Action to perform when the close button is tapped
     /// The button is only displayed when the handler is not nil
-    public let dismissHandler: (() -> Void)?
+    public let dismissHandler: (@Sendable () -> Void)?
 
     public init(
         headerImage: UIImage?,
         slides: [Slide],
         pageIndicatorColor: UIColor?,
         isScrollEnabled: Bool,
-        dismissHandler: (() -> Void)?,
+        dismissHandler: (@Sendable () -> Void)?,
         isPageIndicatorHidden: Bool
     ) {
         self.headerImage = headerImage

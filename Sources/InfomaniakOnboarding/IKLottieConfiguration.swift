@@ -17,10 +17,10 @@
  */
 
 import Foundation
-import Lottie
+@preconcurrency import Lottie
 import UIKit
 
-@frozen public struct IKLottieConfiguration {
+public struct IKLottieConfiguration: Sendable {
     public let id: Int
     public let filename: String
     public let bundle: Bundle
