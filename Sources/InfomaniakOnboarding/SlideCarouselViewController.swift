@@ -67,6 +67,7 @@ class SlideCarouselViewController: UICollectionViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.isPrefetchingEnabled = true
         collectionView.contentInsetAdjustmentBehavior = .never
+        collectionView.backgroundColor = .clear
 
         pageIndicator.addTarget(self, action: #selector(pageChanged), for: .valueChanged)
     }

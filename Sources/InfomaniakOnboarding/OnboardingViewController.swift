@@ -143,6 +143,7 @@ public class OnboardingViewController: UIViewController {
             return uiView
         } else if let view = delegate?.bottomViewForIndex(newSlideIndex) {
             let controller = UIHostingController(rootView: AnyView(view))
+            controller.view.backgroundColor = .clear
             return controller.view
         } else {
             return UIView(frame: .zero)
