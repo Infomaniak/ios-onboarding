@@ -47,6 +47,8 @@ public class OnboardingViewController: UIViewController {
         slideCarouselViewController.pageIndicator
     }
 
+    public weak var delegate: OnboardingViewControllerDelegate?
+
     let configuration: OnboardingConfiguration
 
     let headerImageView: UIImageView?
@@ -55,7 +57,7 @@ public class OnboardingViewController: UIViewController {
     let slideCarouselViewController: SlideCarouselViewController
     let bottomContainerView = UIView(frame: .zero)
 
-    public weak var delegate: OnboardingViewControllerDelegate?
+    var bottomViewCache: [Int: UIView] = [:]
 
     public init(configuration: OnboardingConfiguration) {
         slideCarouselViewController = SlideCarouselViewController(
@@ -138,12 +140,26 @@ public class OnboardingViewController: UIViewController {
         slideCarouselViewController.setSelectedSlide(index: index)
     }
 
+    public func reloadView(at index: Int) {
+        bottomViewCache[index] = nil
+        if index == slideCarouselViewController.currentSlideIndex {
+            onSlideChanged(newSlideIndex: index)
+        }
+    }
+
     func resolveBottomView(newSlideIndex: Int) -> UIView {
+        if let cachedView = bottomViewCache[newSlideIndex] {
+            return cachedView
+        }
+
         if let uiView = delegate?.bottomUIViewForIndex(newSlideIndex) {
+            bottomViewCache[newSlideIndex] = uiView
             return uiView
         } else if let view = delegate?.bottomViewForIndex(newSlideIndex) {
             let controller = UIHostingController(rootView: AnyView(view))
             controller.view.backgroundColor = .clear
+
+            bottomViewCache[newSlideIndex] = controller.view
             return controller.view
         } else {
             return UIView(frame: .zero)
