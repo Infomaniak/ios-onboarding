@@ -65,8 +65,8 @@ public class SlideCollectionViewCell: UICollectionViewCell {
                 illustrationAnimationView.animation = jsonAnimation
             case .dotLottie:
                 Task {
-                    let dotLottieAnimation = try await DotLottieFile.asset(
-                        named: animationConfiguration.filename,
+                    let dotLottieAnimation = try await DotLottieFile.named(
+                        animationConfiguration.filename,
                         bundle: animationConfiguration.bundle
                     )
                     illustrationAnimationView.loadAnimation(from: dotLottieAnimation)
