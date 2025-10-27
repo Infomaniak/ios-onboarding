@@ -21,23 +21,26 @@ import Foundation
 import UIKit
 
 public struct IKLottieConfiguration: Sendable {
+    public enum AnimationType: Sendable {
+        case json
+        case dotLottie
+    }
+
     public let id: Int
     public let filename: String
     public let bundle: Bundle
+    public let animationType: AnimationType
     public let loopMode: LottieLoopMode
     public let contentMode: UIView.ContentMode
     public let loopFrameStart: Int?
     public let loopFrameEnd: Int?
     public let lottieConfiguration: LottieConfiguration
 
-    public var animation: LottieAnimation? {
-        return LottieAnimation.named(filename, bundle: bundle)
-    }
-
     public init(
         id: Int,
         filename: String,
         bundle: Bundle,
+        animationType: AnimationType = .json,
         loopMode: LottieLoopMode = .playOnce,
         contentMode: UIView.ContentMode = UIView.ContentMode.scaleAspectFit,
         loopFrameStart: Int? = nil,
@@ -47,6 +50,7 @@ public struct IKLottieConfiguration: Sendable {
         self.id = id
         self.filename = filename
         self.bundle = bundle
+        self.animationType = animationType
         self.loopMode = loopMode
         self.contentMode = contentMode
         self.loopFrameStart = loopFrameStart

@@ -58,7 +58,20 @@ public class SlideCollectionViewCell: UICollectionViewCell {
 
             configuration = animationConfiguration
             illustrationAnimationView.configuration = animationConfiguration.lottieConfiguration
-            illustrationAnimationView.animation = animationConfiguration.animation
+
+            switch animationConfiguration.animationType {
+            case .json:
+                let jsonAnimation = LottieAnimation.named(animationConfiguration.filename, bundle: animationConfiguration.bundle)
+                illustrationAnimationView.animation = jsonAnimation
+            case .dotLottie:
+                Task {
+                    let dotLottieAnimation = try await DotLottieFile.asset(
+                        named: animationConfiguration.filename,
+                        bundle: animationConfiguration.bundle
+                    )
+                    illustrationAnimationView.loadAnimation(from: dotLottieAnimation)
+                }
+            }
         }
 
         if let slideBottomView = slide.bottomViewController.view {
