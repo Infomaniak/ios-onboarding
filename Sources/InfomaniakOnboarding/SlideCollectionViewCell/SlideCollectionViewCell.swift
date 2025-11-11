@@ -25,19 +25,80 @@ struct AnimationState {
     let toFrame: AnimationFrameTime?
 }
 
+@MainActor
+enum IllustrationAnimationViewContent {
+    case airbnbLottieAnimationView(LottieAnimationView, IKLottieConfiguration)
+
+    var animationState: AnimationState {
+        switch self {
+        case .airbnbLottieAnimationView(let animationView, _):
+            let currentFrame = animationView.currentFrame
+            let toFrame = animationView.animation?.endFrame
+            return AnimationState(fromFrame: currentFrame, toFrame: toFrame)
+        }
+    }
+
+    func prepareForReuse() {
+        switch self {
+        case .airbnbLottieAnimationView(let animationView, _):
+            animationView.removeFromSuperview()
+        }
+    }
+
+    func resumePlaying(animationState: AnimationState?) {
+        switch self {
+        case .airbnbLottieAnimationView(let animationView, let configuration):
+            guard !animationView.isAnimationPlaying else { return }
+
+            if let fromFrame = animationState?.fromFrame,
+               let toFrame = animationState?.toFrame {
+                animationView.play(fromFrame: fromFrame, toFrame: toFrame, loopMode: .playOnce) { _ in
+                    afterInitialLoopPlay(configuration: configuration)
+                }
+            } else {
+                animationView.play { _ in
+                    afterInitialLoopPlay(configuration: configuration)
+                }
+            }
+        }
+    }
+
+    func afterInitialLoopPlay(configuration: IKLottieConfiguration) {
+        switch self {
+        case .airbnbLottieAnimationView(let animationView, let configuration):
+            guard let loopFrameStart = configuration.loopFrameStart,
+                  let loopFrameEnd = configuration.loopFrameEnd else { return }
+
+            animationView.play(
+                fromFrame: AnimationFrameTime(loopFrameStart),
+                toFrame: AnimationFrameTime(loopFrameEnd),
+                loopMode: .loop
+            )
+        }
+    }
+
+    func pausePlaying() {
+        switch self {
+        case .airbnbLottieAnimationView(let animationView, _):
+            guard animationView.isAnimationPlaying else { return }
+            animationView.pause()
+        }
+    }
+}
+
 public class SlideCollectionViewCell: UICollectionViewCell {
     @IBOutlet public private(set) weak var backgroundImageView: UIImageView!
-    @IBOutlet public private(set) weak var illustrationAnimationView: LottieAnimationView!
+    @IBOutlet public private(set) weak var illustrationAnimationView: UIView!
     @IBOutlet public private(set) weak var bottomView: UIView!
     @IBOutlet public private(set) weak var illustrationImageView: UIImageView!
 
-    var configuration: IKLottieConfiguration?
+    var illustrationAnimationViewContent: IllustrationAnimationViewContent?
 
     override public func prepareForReuse() {
         super.prepareForReuse()
         illustrationImageView.image = nil
-        illustrationAnimationView.animation = nil
-        illustrationAnimationView.configuration = LottieConfiguration()
+        illustrationAnimationViewContent?.prepareForReuse()
+        illustrationAnimationViewContent = nil
         for view in bottomView.subviews {
             view.removeFromSuperview()
         }
@@ -56,20 +117,22 @@ public class SlideCollectionViewCell: UICollectionViewCell {
             illustrationAnimationView.isHidden = false
             illustrationImageView.isHidden = true
 
-            configuration = animationConfiguration
-            illustrationAnimationView.configuration = animationConfiguration.lottieConfiguration
+            let animationView = LottieAnimationView()
+            animationView.configuration = animationConfiguration.lottieConfiguration
+            illustrationAnimationViewContent = .airbnbLottieAnimationView(animationView, animationConfiguration)
+            addAnimationContentView(animationView)
 
             switch animationConfiguration.animationType {
             case .json:
                 let jsonAnimation = LottieAnimation.named(animationConfiguration.filename, bundle: animationConfiguration.bundle)
-                illustrationAnimationView.animation = jsonAnimation
+                animationView.animation = jsonAnimation
             case .dotLottie:
                 Task {
                     let dotLottieAnimation = try await DotLottieFile.named(
                         animationConfiguration.filename,
                         bundle: animationConfiguration.bundle
                     )
-                    illustrationAnimationView.loadAnimation(from: dotLottieAnimation)
+                    animationView.loadAnimation(from: dotLottieAnimation)
                 }
             }
         }
@@ -90,35 +153,23 @@ public class SlideCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func resumePlaying(animationState: AnimationState?) {
-        guard let configuration,
-              !illustrationAnimationView.isAnimationPlaying else { return }
+    func addAnimationContentView(_ animationView: UIView) {
+        illustrationAnimationView.addSubview(animationView)
+        animationView.translatesAutoresizingMaskIntoConstraints = false
 
-        if let fromFrame = animationState?.fromFrame,
-           let toFrame = animationState?.toFrame {
-            illustrationAnimationView.play(fromFrame: fromFrame, toFrame: toFrame, loopMode: .playOnce) { [weak self] _ in
-                self?.afterInitialLoopPlay(configuration: configuration)
-            }
-        } else {
-            illustrationAnimationView.play { [weak self] _ in
-                self?.afterInitialLoopPlay(configuration: configuration)
-            }
-        }
+        NSLayoutConstraint.activate([
+            animationView.topAnchor.constraint(equalTo: illustrationAnimationView.topAnchor),
+            animationView.bottomAnchor.constraint(equalTo: illustrationAnimationView.bottomAnchor),
+            animationView.leadingAnchor.constraint(equalTo: illustrationAnimationView.leadingAnchor),
+            animationView.trailingAnchor.constraint(equalTo: illustrationAnimationView.trailingAnchor)
+        ])
     }
 
-    func afterInitialLoopPlay(configuration: IKLottieConfiguration) {
-        guard let loopFrameStart = configuration.loopFrameStart,
-              let loopFrameEnd = configuration.loopFrameEnd else { return }
-
-        illustrationAnimationView.play(
-            fromFrame: AnimationFrameTime(loopFrameStart),
-            toFrame: AnimationFrameTime(loopFrameEnd),
-            loopMode: .loop
-        )
+    func resumePlaying(animationState: AnimationState?) {
+        illustrationAnimationViewContent?.resumePlaying(animationState: animationState)
     }
 
     func pausePlaying() {
-        guard illustrationAnimationView.isAnimationPlaying else { return }
-        illustrationAnimationView.pause()
+        illustrationAnimationViewContent?.pausePlaying()
     }
 }
