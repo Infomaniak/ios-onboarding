@@ -16,6 +16,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import DotLottie
 import Foundation
 import Lottie
 import UIKit
@@ -26,8 +27,9 @@ struct AnimationState {
 }
 
 @MainActor
-enum IllustrationAnimationViewContent {
+public enum IllustrationAnimationViewContent {
     case airbnbLottieAnimationView(LottieAnimationView, IKLottieConfiguration)
+    case dotLottieAnimationView(DotLottieAnimationView, IKDotLottieConfiguration)
 
     var animationState: AnimationState {
         switch self {
@@ -35,6 +37,9 @@ enum IllustrationAnimationViewContent {
             let currentFrame = animationView.currentFrame
             let toFrame = animationView.animation?.endFrame
             return AnimationState(fromFrame: currentFrame, toFrame: toFrame)
+        case .dotLottieAnimationView(let dotLottieView, _):
+            let currentFrame = dotLottieView.dotLottieViewModel.currentFrame()
+            return AnimationState(fromFrame: AnimationFrameTime(currentFrame), toFrame: 0)
         }
     }
 
@@ -42,6 +47,8 @@ enum IllustrationAnimationViewContent {
         switch self {
         case .airbnbLottieAnimationView(let animationView, _):
             animationView.removeFromSuperview()
+        case .dotLottieAnimationView(let dotLottieView, _):
+            dotLottieView.removeFromSuperview()
         }
     }
 
@@ -53,17 +60,24 @@ enum IllustrationAnimationViewContent {
             if let fromFrame = animationState?.fromFrame,
                let toFrame = animationState?.toFrame {
                 animationView.play(fromFrame: fromFrame, toFrame: toFrame, loopMode: .playOnce) { _ in
-                    afterInitialLoopPlay(configuration: configuration)
+                    afterInitialLoopPlay()
                 }
             } else {
                 animationView.play { _ in
-                    afterInitialLoopPlay(configuration: configuration)
+                    afterInitialLoopPlay()
                 }
+            }
+        case .dotLottieAnimationView(let dotLottieView, _):
+            guard !dotLottieView.dotLottieViewModel.isPlaying() else { return }
+            if let fromFrame = animationState?.fromFrame {
+                dotLottieView.dotLottieViewModel.play(fromFrame: Float(fromFrame))
+            } else {
+                dotLottieView.dotLottieViewModel.play()
             }
         }
     }
 
-    func afterInitialLoopPlay(configuration: IKLottieConfiguration) {
+    private func afterInitialLoopPlay() {
         switch self {
         case .airbnbLottieAnimationView(let animationView, let configuration):
             guard let loopFrameStart = configuration.loopFrameStart,
@@ -74,6 +88,8 @@ enum IllustrationAnimationViewContent {
                 toFrame: AnimationFrameTime(loopFrameEnd),
                 loopMode: .loop
             )
+        case .dotLottieAnimationView:
+            break
         }
     }
 
@@ -82,6 +98,9 @@ enum IllustrationAnimationViewContent {
         case .airbnbLottieAnimationView(let animationView, _):
             guard animationView.isAnimationPlaying else { return }
             animationView.pause()
+        case .dotLottieAnimationView(let dotLottieView, _):
+            guard dotLottieView.dotLottieViewModel.isPlaying() else { return }
+            dotLottieView.dotLottieViewModel.pause()
         }
     }
 }
@@ -92,7 +111,7 @@ public class SlideCollectionViewCell: UICollectionViewCell {
     @IBOutlet public private(set) weak var bottomView: UIView!
     @IBOutlet public private(set) weak var illustrationImageView: UIImageView!
 
-    var illustrationAnimationViewContent: IllustrationAnimationViewContent?
+    public private(set) var illustrationAnimationViewContent: IllustrationAnimationViewContent?
 
     override public func prepareForReuse() {
         super.prepareForReuse()
@@ -135,6 +154,18 @@ public class SlideCollectionViewCell: UICollectionViewCell {
                     animationView.loadAnimation(from: dotLottieAnimation)
                 }
             }
+        case .dotLottieAnimation(let dotLottieConfiguration):
+            illustrationAnimationView.isHidden = false
+            illustrationImageView.isHidden = true
+
+            let dotLottieView: DotLottieAnimationView = DotLottieAnimation(
+                fileName: dotLottieConfiguration.filename,
+                bundle: dotLottieConfiguration.bundle,
+                config: AnimationConfig(loop: dotLottieConfiguration.isLooping, mode: dotLottieConfiguration.mode)
+            ).view()
+
+            illustrationAnimationViewContent = .dotLottieAnimationView(dotLottieView, dotLottieConfiguration)
+            addAnimationContentView(dotLottieView)
         }
 
         if let slideBottomView = slide.bottomViewController.view {
