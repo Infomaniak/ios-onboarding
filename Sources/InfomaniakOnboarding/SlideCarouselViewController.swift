@@ -172,10 +172,9 @@ extension SlideCarouselViewController {
     ) {
         guard let cell = cell as? SlideCollectionViewCell else { return }
         cell.pausePlaying()
-        animationStateForSlide[indexPath] = AnimationState(
-            fromFrame: cell.illustrationAnimationView.currentFrame,
-            toFrame: cell.illustrationAnimationView.animation?.endFrame
-        )
+        if let state = cell.illustrationAnimationViewContent?.animationState {
+            animationStateForSlide[indexPath] = state
+        }
     }
 
     func collectionView(
