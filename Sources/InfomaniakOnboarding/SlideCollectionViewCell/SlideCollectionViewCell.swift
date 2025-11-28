@@ -33,6 +33,9 @@ public class SlideCollectionViewCell: UICollectionViewCell {
 
     var configuration: IKLottieConfiguration?
 
+    private var dotLottieLoaded = false
+    private var onDotLottieLoaded: (() -> Void)?
+
     override public func prepareForReuse() {
         super.prepareForReuse()
         illustrationImageView.image = nil
@@ -65,11 +68,17 @@ public class SlideCollectionViewCell: UICollectionViewCell {
                 illustrationAnimationView.animation = jsonAnimation
             case .dotLottie:
                 Task {
+                    dotLottieLoaded = false
+
                     let dotLottieAnimation = try await DotLottieFile.named(
                         animationConfiguration.filename,
                         bundle: animationConfiguration.bundle
                     )
                     illustrationAnimationView.loadAnimation(from: dotLottieAnimation)
+
+                    onDotLottieLoaded?()
+                    onDotLottieLoaded = nil
+                    dotLottieLoaded = true
                 }
             }
         }
@@ -94,6 +103,20 @@ public class SlideCollectionViewCell: UICollectionViewCell {
         guard let configuration,
               !illustrationAnimationView.isAnimationPlaying else { return }
 
+        if configuration.animationType == .dotLottie {
+            if dotLottieLoaded {
+                resumePlayingAfterLoading(configuration: configuration, animationState: animationState)
+            } else {
+                onDotLottieLoaded = { [weak self] in
+                    self?.resumePlayingAfterLoading(configuration: configuration, animationState: animationState)
+                }
+            }
+        } else {
+            resumePlayingAfterLoading(configuration: configuration, animationState: animationState)
+        }
+    }
+
+    private func resumePlayingAfterLoading(configuration: IKLottieConfiguration, animationState: AnimationState?) {
         if let fromFrame = animationState?.fromFrame,
            let toFrame = animationState?.toFrame {
             illustrationAnimationView.play(fromFrame: fromFrame, toFrame: toFrame, loopMode: .playOnce) { [weak self] _ in
