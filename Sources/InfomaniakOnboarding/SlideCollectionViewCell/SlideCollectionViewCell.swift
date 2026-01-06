@@ -113,8 +113,8 @@ public class SlideCollectionViewCell: UICollectionViewCell {
 
     public private(set) var illustrationAnimationViewContent: IllustrationAnimationViewContent?
 
-    private var dotLottieLoaded = false
-    private var onDotLottieLoaded: (() -> Void)?
+    private var airbnbDotLottieLoaded = false
+    private var onAirbnbDotLottieLoaded: (() -> Void)?
 
     override public func prepareForReuse() {
         super.prepareForReuse()
@@ -150,7 +150,7 @@ public class SlideCollectionViewCell: UICollectionViewCell {
                 animationView.animation = jsonAnimation
             case .dotLottie:
                 Task {
-                    dotLottieLoaded = false
+                    airbnbDotLottieLoaded = false
 
                     let dotLottieAnimation = try await DotLottieFile.named(
                         animationConfiguration.filename,
@@ -158,9 +158,9 @@ public class SlideCollectionViewCell: UICollectionViewCell {
                     )
                     animationView.loadAnimation(from: dotLottieAnimation)
 
-                    onDotLottieLoaded?()
-                    onDotLottieLoaded = nil
-                    dotLottieLoaded = true
+                    onAirbnbDotLottieLoaded?()
+                    onAirbnbDotLottieLoaded = nil
+                    airbnbDotLottieLoaded = true
                 }
             }
         case .dotLottieAnimation(let dotLottieConfiguration):
@@ -213,10 +213,10 @@ public class SlideCollectionViewCell: UICollectionViewCell {
                 return
             }
 
-            if dotLottieLoaded {
+            if airbnbDotLottieLoaded {
                 illustrationAnimationViewContent?.resumePlaying(animationState: animationState)
             } else {
-                onDotLottieLoaded = { [weak self] in
+                onAirbnbDotLottieLoaded = { [weak self] in
                     self?.illustrationAnimationViewContent?.resumePlaying(animationState: animationState)
                 }
             }
