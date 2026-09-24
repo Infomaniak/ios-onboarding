@@ -17,7 +17,8 @@ let package = Package(
     targets: [
         .target(
             name: "InfomaniakOnboarding",
-            dependencies: [.product(name: "Lottie", package: "lottie-spm")]
+            dependencies: [.product(name: "Lottie", package: "lottie-spm")],
+            resources: [.copy("Resources/ProductIcons")]
         ),
         .testTarget(
             name: "InfomaniakOnboardingTests",

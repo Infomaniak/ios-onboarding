@@ -18,6 +18,22 @@
 
 import SwiftUI
 
+public struct OnboardingBackgroundGradient: @unchecked Sendable {
+    public let colors: [UIColor]
+    public let startPoint: CGPoint
+    public let endPoint: CGPoint
+
+    public init(
+        colors: [UIColor],
+        startPoint: CGPoint = CGPoint(x: 0, y: 0),
+        endPoint: CGPoint = CGPoint(x: 1, y: 1)
+    ) {
+        self.colors = colors
+        self.startPoint = startPoint
+        self.endPoint = endPoint
+    }
+}
+
 public struct OnboardingConfiguration: Sendable {
     /// The image displayed at the top of the view, usually the app logo
     public let headerImage: UIImage?
@@ -29,6 +45,8 @@ public struct OnboardingConfiguration: Sendable {
     public let isScrollEnabled: Bool
     /// Show or hide points on slides
     public let isPageIndicatorHidden: Bool
+    /// Optional gradient displayed behind the onboarding content
+    public let backgroundGradient: OnboardingBackgroundGradient?
 
     /// Action to perform when the close button is tapped
     /// The button is only displayed when the handler is not nil
@@ -40,7 +58,8 @@ public struct OnboardingConfiguration: Sendable {
         pageIndicatorColor: UIColor?,
         isScrollEnabled: Bool,
         dismissHandler: (@Sendable () -> Void)?,
-        isPageIndicatorHidden: Bool
+        isPageIndicatorHidden: Bool,
+        backgroundGradient: OnboardingBackgroundGradient? = nil
     ) {
         self.headerImage = headerImage
         self.slides = slides
@@ -48,5 +67,6 @@ public struct OnboardingConfiguration: Sendable {
         self.isScrollEnabled = isScrollEnabled
         self.dismissHandler = dismissHandler
         self.isPageIndicatorHidden = isPageIndicatorHidden
+        self.backgroundGradient = backgroundGradient
     }
 }
