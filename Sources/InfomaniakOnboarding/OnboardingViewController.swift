@@ -39,6 +39,8 @@ public extension OnboardingViewControllerDelegate {
 }
 
 public class OnboardingViewController: UIViewController {
+    private static let bottomContainerSpacing: CGFloat = 24
+
     public var currentSlideViewCell: SlideCollectionViewCell? {
         slideCarouselViewController.collectionView.visibleCells.first as? SlideCollectionViewCell
     }
@@ -118,13 +120,21 @@ public class OnboardingViewController: UIViewController {
         stackView.alignment = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillProportionally
+        // The page indicator sits right at the bottom edge of the carousel, so without any spacing the bottom
+        // container's content (e.g. buttons) touches it. This gap is carved out of the bottom container's own
+        // height below, so the overall 80/20 split is preserved.
+        stackView.spacing = Self.bottomContainerSpacing
 
         stackView.addArrangedSubview(slideCarouselViewController.view)
         addChild(slideCarouselViewController)
         slideCarouselViewController.view.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.8).isActive = true
 
         stackView.addArrangedSubview(bottomContainerView)
-        bottomContainerView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2).isActive = true
+        bottomContainerView.heightAnchor.constraint(
+            equalTo: view.heightAnchor,
+            multiplier: 0.2,
+            constant: -Self.bottomContainerSpacing
+        ).isActive = true
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
