@@ -89,7 +89,8 @@ class SlideCarouselViewController: UICollectionViewController {
         pageIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             pageIndicator.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
-            pageIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pageIndicator.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            pageIndicator.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
 
@@ -159,6 +160,7 @@ extension SlideCarouselViewController {
         forItemAt indexPath: IndexPath
     ) {
         guard let cell = cell as? SlideCollectionViewCell else { return }
+        cell.constrainBottomView(above: pageIndicator, spacing: 48)
 
         let animationState = animationStateForSlide[indexPath]
         cell.resumePlaying(animationState: animationState)

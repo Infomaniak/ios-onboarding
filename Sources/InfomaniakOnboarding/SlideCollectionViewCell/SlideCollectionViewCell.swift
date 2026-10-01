@@ -228,4 +228,59 @@ public class SlideCollectionViewCell: UICollectionViewCell {
     func pausePlaying() {
         illustrationAnimationViewContent?.pausePlaying()
     }
+    
+    override public func awakeFromNib() {
+        super.awakeFromNib()
+        makeBackgroundIgnoreSafeArea()
+        respectSafeAreaTrailingExceptBackground()
+    }
+
+    private func makeBackgroundIgnoreSafeArea() {
+        for constraint in contentView.constraints
+            where (constraint.firstItem === backgroundImageView || constraint.secondItem === backgroundImageView)
+            && [.top, .bottom, .leading, .trailing].contains(constraint.firstAttribute)
+        {
+            constraint.isActive = false
+        }
+
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        ])
+    }
+
+    private func respectSafeAreaTrailingExceptBackground() {
+        let componentsToConstrain: [UIView] = [illustrationAnimationView, bottomView, illustrationImageView]
+        let horizontalMargin: CGFloat = 24
+
+        for component in componentsToConstrain {
+            for constraint in contentView.constraints
+                where (constraint.firstItem === component || constraint.secondItem === component)
+                && constraint.firstAttribute == .trailing
+            {
+                constraint.isActive = false
+            }
+
+            NSLayoutConstraint.activate([
+                component.leadingAnchor.constraint(
+                    equalTo: contentView.safeAreaLayoutGuide.leadingAnchor,
+                    constant: horizontalMargin
+                ),
+                component.trailingAnchor.constraint(
+                    equalTo: contentView.safeAreaLayoutGuide.trailingAnchor,
+                    constant: -horizontalMargin
+                )
+            ])
+        }
+    }
+
+    func constrainBottomView(above pageIndicator: UIView, spacing: CGFloat = 24) {
+        bottomView.bottomAnchor.constraint(
+            lessThanOrEqualTo: pageIndicator.topAnchor,
+            constant: -spacing
+        ).isActive = true
+    }
 }
