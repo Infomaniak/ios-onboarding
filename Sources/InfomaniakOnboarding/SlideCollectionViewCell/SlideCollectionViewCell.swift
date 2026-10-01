@@ -122,6 +122,7 @@ public class SlideCollectionViewCell: UICollectionViewCell {
     private var airbnbDotLottieLoaded = false
     private var onAirbnbDotLottieLoaded: (() -> Void)?
     private var illustrationAspectRatioConstraint: NSLayoutConstraint?
+    private var illustrationContentImageView: UIImageView?
     private var bottomViewAbovePageIndicatorConstraint: NSLayoutConstraint?
     private static let bottomViewBottomSpacing: CGFloat = 48
 
@@ -137,6 +138,8 @@ public class SlideCollectionViewCell: UICollectionViewCell {
     override public func prepareForReuse() {
         super.prepareForReuse()
         illustrationImageView.image = nil
+        illustrationContentImageView?.removeFromSuperview()
+        illustrationContentImageView = nil
         illustrationAnimationViewContent?.prepareForReuse()
         illustrationAnimationViewContent = nil
         illustrationAspectRatioConstraint?.isActive = false
@@ -153,9 +156,15 @@ public class SlideCollectionViewCell: UICollectionViewCell {
 
         switch slide.content {
         case .illustration(let image):
-            illustrationAnimationView.isHidden = true
-            illustrationImageView.isHidden = false
+            illustrationAnimationView.isHidden = false
+            illustrationImageView.isHidden = true
             illustrationImageView.image = image
+
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFit
+            illustrationContentImageView = imageView
+            addAnimationContentView(imageView)
+            constrainIllustrationAspectRatio(of: imageView, to: image.size)
         case .animation(let animationConfiguration):
             illustrationAnimationView.isHidden = false
             illustrationImageView.isHidden = true

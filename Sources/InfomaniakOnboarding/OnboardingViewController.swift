@@ -120,9 +120,6 @@ public class OnboardingViewController: UIViewController {
         stackView.alignment = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillProportionally
-        // The page indicator sits right at the bottom edge of the carousel, so without any spacing the bottom
-        // container's content (e.g. buttons) touches it. This gap is carved out of the bottom container's own
-        // height below, so the overall 80/20 split is preserved.
         stackView.spacing = Self.bottomContainerSpacing
 
         stackView.addArrangedSubview(slideCarouselViewController.view)
