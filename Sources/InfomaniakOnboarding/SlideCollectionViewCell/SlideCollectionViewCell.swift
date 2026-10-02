@@ -139,6 +139,16 @@ public class SlideCollectionViewCell: UICollectionViewCell {
             illustrationAnimationView.isHidden = true
             illustrationImageView.isHidden = false
             illustrationImageView.image = image
+
+            let safeArea = contentView.safeAreaLayoutGuide
+
+            NSLayoutConstraint.activate([
+                illustrationImageView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+                illustrationImageView.leadingAnchor.constraint(greaterThanOrEqualTo: safeArea.leadingAnchor, constant: 24),
+                illustrationImageView.trailingAnchor.constraint(lessThanOrEqualTo: safeArea.trailingAnchor, constant: -24),
+                illustrationImageView.topAnchor.constraint(greaterThanOrEqualTo: safeArea.topAnchor, constant: 128),
+                illustrationImageView.bottomAnchor.constraint(equalTo: illustrationAnimationView.bottomAnchor, constant: -24)
+            ])
         case .animation(let animationConfiguration):
             illustrationAnimationView.isHidden = false
             illustrationImageView.isHidden = true
