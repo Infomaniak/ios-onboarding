@@ -106,21 +106,25 @@ public enum IllustrationAnimationViewContent {
 }
 
 public class SlideCollectionViewCell: UICollectionViewCell {
-    @IBOutlet public private(set) weak var backgroundImageView: UIImageView!
-    @IBOutlet public private(set) weak var illustrationAnimationView: UIView!
-    @IBOutlet public private(set) weak var bottomView: UIView!
-    @IBOutlet public private(set) weak var illustrationImageView: UIImageView!
+    @IBOutlet public private(set) var backgroundImageView: UIImageView!
+    @IBOutlet public private(set) var illustrationAnimationView: UIView!
+    @IBOutlet public private(set) var bottomView: UIView!
+    @IBOutlet public private(set) var illustrationImageView: UIImageView!
 
     public private(set) var illustrationAnimationViewContent: IllustrationAnimationViewContent?
 
     private var airbnbDotLottieLoaded = false
     private var onAirbnbDotLottieLoaded: (() -> Void)?
+    private var illustrationAspectRatioConstraint: NSLayoutConstraint?
+    private var illustrationContentImageView: UIImageView?
 
     override public func prepareForReuse() {
         super.prepareForReuse()
         illustrationImageView.image = nil
         illustrationAnimationViewContent?.prepareForReuse()
         illustrationAnimationViewContent = nil
+        illustrationAspectRatioConstraint?.isActive = false
+        illustrationAspectRatioConstraint = nil
         for view in bottomView.subviews {
             view.removeFromSuperview()
         }
@@ -135,6 +139,16 @@ public class SlideCollectionViewCell: UICollectionViewCell {
             illustrationAnimationView.isHidden = true
             illustrationImageView.isHidden = false
             illustrationImageView.image = image
+
+            let safeArea = contentView.safeAreaLayoutGuide
+
+            NSLayoutConstraint.activate([
+                illustrationImageView.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+                illustrationImageView.leadingAnchor.constraint(greaterThanOrEqualTo: safeArea.leadingAnchor, constant: 24),
+                illustrationImageView.trailingAnchor.constraint(lessThanOrEqualTo: safeArea.trailingAnchor, constant: -24),
+                illustrationImageView.topAnchor.constraint(greaterThanOrEqualTo: safeArea.topAnchor, constant: 128),
+                illustrationImageView.bottomAnchor.constraint(equalTo: illustrationAnimationView.bottomAnchor, constant: -24)
+            ])
         case .animation(let animationConfiguration):
             illustrationAnimationView.isHidden = false
             illustrationImageView.isHidden = true
@@ -186,22 +200,40 @@ public class SlideCollectionViewCell: UICollectionViewCell {
 
             NSLayoutConstraint.activate([
                 slideBottomView.topAnchor.constraint(equalTo: bottomView.topAnchor),
-                slideBottomView.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor),
-                slideBottomView.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor),
-                slideBottomView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor)
+                slideBottomView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -48),
+                slideBottomView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 12),
+                slideBottomView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -12)
             ])
         }
     }
-
     func addAnimationContentView(_ animationView: UIView) {
         illustrationAnimationView.addSubview(animationView)
         animationView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            animationView.topAnchor.constraint(equalTo: illustrationAnimationView.topAnchor),
-            animationView.bottomAnchor.constraint(equalTo: illustrationAnimationView.bottomAnchor),
-            animationView.leadingAnchor.constraint(equalTo: illustrationAnimationView.leadingAnchor),
-            animationView.trailingAnchor.constraint(equalTo: illustrationAnimationView.trailingAnchor)
+            illustrationAnimationView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            illustrationAnimationView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            illustrationAnimationView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            
+            animationView.leadingAnchor.constraint(
+                equalTo: illustrationAnimationView.leadingAnchor,
+                constant: 24
+            ),
+            
+            animationView.trailingAnchor.constraint(
+                equalTo: illustrationAnimationView.trailingAnchor,
+                constant: -24
+            ),
+            
+            animationView.bottomAnchor.constraint(
+                equalTo: illustrationAnimationView.safeAreaLayoutGuide.bottomAnchor,
+                constant: -24
+            ),
+
+            animationView.topAnchor.constraint(
+                greaterThanOrEqualTo: illustrationAnimationView.safeAreaLayoutGuide.topAnchor,
+                constant: 128
+            )
         ])
     }
 

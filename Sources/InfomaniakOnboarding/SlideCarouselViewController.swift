@@ -88,8 +88,9 @@ class SlideCarouselViewController: UICollectionViewController {
 
         pageIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            pageIndicator.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
-            pageIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pageIndicator.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32),
+            pageIndicator.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            pageIndicator.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
 
