@@ -160,7 +160,6 @@ extension SlideCarouselViewController {
         forItemAt indexPath: IndexPath
     ) {
         guard let cell = cell as? SlideCollectionViewCell else { return }
-//        cell.constrainBottomView(above: pageIndicator, spacing: 48)
 
         let animationState = animationStateForSlide[indexPath]
         cell.resumePlaying(animationState: animationState)

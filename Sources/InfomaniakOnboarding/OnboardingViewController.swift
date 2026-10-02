@@ -39,8 +39,6 @@ public extension OnboardingViewControllerDelegate {
 }
 
 public class OnboardingViewController: UIViewController {
-//    private static let bottomContainerSpacing: CGFloat = 24
-
     public var currentSlideViewCell: SlideCollectionViewCell? {
         slideCarouselViewController.collectionView.visibleCells.first as? SlideCollectionViewCell
     }

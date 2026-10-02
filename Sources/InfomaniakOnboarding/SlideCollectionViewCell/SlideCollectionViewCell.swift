@@ -190,9 +190,9 @@ public class SlideCollectionViewCell: UICollectionViewCell {
 
             NSLayoutConstraint.activate([
                 slideBottomView.topAnchor.constraint(equalTo: bottomView.topAnchor),
-                slideBottomView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-                slideBottomView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-                slideBottomView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
+                slideBottomView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -48),
+                slideBottomView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 12),
+                slideBottomView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -12)
             ])
         }
     }
