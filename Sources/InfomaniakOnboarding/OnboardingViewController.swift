@@ -39,7 +39,7 @@ public extension OnboardingViewControllerDelegate {
 }
 
 public class OnboardingViewController: UIViewController {
-    private static let bottomContainerSpacing: CGFloat = 24
+//    private static let bottomContainerSpacing: CGFloat = 24
 
     public var currentSlideViewCell: SlideCollectionViewCell? {
         slideCarouselViewController.collectionView.visibleCells.first as? SlideCollectionViewCell
@@ -95,9 +95,9 @@ public class OnboardingViewController: UIViewController {
             headerImageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 headerImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-                headerImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                headerImageView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 48),
-                headerImageView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -48)
+                headerImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+                headerImageView.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor),
+                headerImageView.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor)
             ])
         }
 
@@ -120,18 +120,13 @@ public class OnboardingViewController: UIViewController {
         stackView.alignment = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillProportionally
-        stackView.spacing = Self.bottomContainerSpacing
 
         stackView.addArrangedSubview(slideCarouselViewController.view)
         addChild(slideCarouselViewController)
         slideCarouselViewController.view.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.8).isActive = true
 
         stackView.addArrangedSubview(bottomContainerView)
-        bottomContainerView.heightAnchor.constraint(
-            equalTo: view.heightAnchor,
-            multiplier: 0.2,
-            constant: -Self.bottomContainerSpacing
-        ).isActive = true
+        bottomContainerView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2).isActive = true
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor),

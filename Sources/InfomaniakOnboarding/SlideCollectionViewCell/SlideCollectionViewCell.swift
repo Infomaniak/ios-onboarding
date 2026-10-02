@@ -58,8 +58,7 @@ public enum IllustrationAnimationViewContent {
             guard !animationView.isAnimationPlaying else { return }
 
             if let fromFrame = animationState?.fromFrame,
-               let toFrame = animationState?.toFrame
-            {
+               let toFrame = animationState?.toFrame {
                 animationView.play(fromFrame: fromFrame, toFrame: toFrame, loopMode: .playOnce) { _ in
                     afterInitialLoopPlay()
                 }
@@ -107,11 +106,6 @@ public enum IllustrationAnimationViewContent {
 }
 
 public class SlideCollectionViewCell: UICollectionViewCell {
-    private enum Layout {
-        static let horizontalMargin: CGFloat = 24
-        static let illustrationToBottomViewSpacing: CGFloat = 24
-    }
-
     @IBOutlet public private(set) var backgroundImageView: UIImageView!
     @IBOutlet public private(set) var illustrationAnimationView: UIView!
     @IBOutlet public private(set) var bottomView: UIView!
@@ -123,23 +117,10 @@ public class SlideCollectionViewCell: UICollectionViewCell {
     private var onAirbnbDotLottieLoaded: (() -> Void)?
     private var illustrationAspectRatioConstraint: NSLayoutConstraint?
     private var illustrationContentImageView: UIImageView?
-    private var bottomViewAbovePageIndicatorConstraint: NSLayoutConstraint?
-    private static let bottomViewBottomSpacing: CGFloat = 48
-
-    private func applyBottomViewBottomSpacing() {
-        for constraint in contentView.constraints
-            where constraint.firstItem === contentView && constraint.firstAttribute == .bottom
-            && constraint.secondItem === bottomView && constraint.secondAttribute == .bottom
-        {
-            constraint.constant = Self.bottomViewBottomSpacing
-        }
-    }
 
     override public func prepareForReuse() {
         super.prepareForReuse()
         illustrationImageView.image = nil
-        illustrationContentImageView?.removeFromSuperview()
-        illustrationContentImageView = nil
         illustrationAnimationViewContent?.prepareForReuse()
         illustrationAnimationViewContent = nil
         illustrationAspectRatioConstraint?.isActive = false
@@ -150,28 +131,20 @@ public class SlideCollectionViewCell: UICollectionViewCell {
     }
 
     func configureCell(slide: Slide) {
-        applyBottomViewBottomSpacing()
         backgroundImageView.image = slide.backgroundImage
         backgroundImageView.tintColor = slide.backgroundImageTintColor
 
         switch slide.content {
         case .illustration(let image):
-            illustrationAnimationView.isHidden = false
-            illustrationImageView.isHidden = true
+            illustrationAnimationView.isHidden = true
+            illustrationImageView.isHidden = false
             illustrationImageView.image = image
-
-            let imageView = UIImageView(image: image)
-            imageView.contentMode = .scaleAspectFit
-            illustrationContentImageView = imageView
-            addAnimationContentView(imageView)
-            constrainIllustrationAspectRatio(of: imageView, to: image.size)
         case .animation(let animationConfiguration):
             illustrationAnimationView.isHidden = false
             illustrationImageView.isHidden = true
 
             let animationView = LottieAnimationView()
             animationView.configuration = animationConfiguration.lottieConfiguration
-            animationView.contentMode = animationConfiguration.contentMode
             illustrationAnimationViewContent = .airbnbLottieAnimationView(animationView, animationConfiguration)
             addAnimationContentView(animationView)
 
@@ -179,7 +152,6 @@ public class SlideCollectionViewCell: UICollectionViewCell {
             case .json:
                 let jsonAnimation = LottieAnimation.named(animationConfiguration.filename, bundle: animationConfiguration.bundle)
                 animationView.animation = jsonAnimation
-                constrainIllustrationAspectRatio(of: animationView, to: animationView.intrinsicContentSize)
             case .dotLottie:
                 Task {
                     airbnbDotLottieLoaded = false
@@ -189,7 +161,6 @@ public class SlideCollectionViewCell: UICollectionViewCell {
                         bundle: animationConfiguration.bundle
                     )
                     animationView.loadAnimation(from: dotLottieAnimation)
-                    constrainIllustrationAspectRatio(of: animationView, to: animationView.intrinsicContentSize)
 
                     onAirbnbDotLottieLoaded?()
                     onAirbnbDotLottieLoaded = nil
@@ -219,43 +190,41 @@ public class SlideCollectionViewCell: UICollectionViewCell {
 
             NSLayoutConstraint.activate([
                 slideBottomView.topAnchor.constraint(equalTo: bottomView.topAnchor),
-                slideBottomView.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor),
-                slideBottomView.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor),
-                slideBottomView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor)
+                slideBottomView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+                slideBottomView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+                slideBottomView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
             ])
         }
     }
-
     func addAnimationContentView(_ animationView: UIView) {
         illustrationAnimationView.addSubview(animationView)
         animationView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            animationView.topAnchor.constraint(greaterThanOrEqualTo: illustrationAnimationView.topAnchor),
-            animationView.bottomAnchor.constraint(
-                equalTo: illustrationAnimationView.bottomAnchor,
-                constant: -Layout.illustrationToBottomViewSpacing
+            illustrationAnimationView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            illustrationAnimationView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            illustrationAnimationView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            
+            animationView.leadingAnchor.constraint(
+                equalTo: illustrationAnimationView.leadingAnchor,
+                constant: 24
             ),
-            animationView.leadingAnchor.constraint(equalTo: illustrationAnimationView.leadingAnchor),
-            animationView.trailingAnchor.constraint(equalTo: illustrationAnimationView.trailingAnchor)
+            
+            animationView.trailingAnchor.constraint(
+                equalTo: illustrationAnimationView.trailingAnchor,
+                constant: -24
+            ),
+            
+            animationView.bottomAnchor.constraint(
+                equalTo: illustrationAnimationView.safeAreaLayoutGuide.bottomAnchor,
+                constant: -24
+            ),
+
+            animationView.topAnchor.constraint(
+                greaterThanOrEqualTo: illustrationAnimationView.safeAreaLayoutGuide.topAnchor,
+                constant: 128
+            )
         ])
-
-        let fillContainer = animationView.topAnchor.constraint(equalTo: illustrationAnimationView.topAnchor)
-        fillContainer.priority = .defaultLow
-        fillContainer.isActive = true
-    }
-
-    private func constrainIllustrationAspectRatio(of animationView: UIView, to size: CGSize) {
-        guard size.width > 0, size.height > 0 else { return }
-
-        illustrationAspectRatioConstraint?.isActive = false
-
-        let constraint = animationView.heightAnchor.constraint(
-            equalTo: animationView.widthAnchor,
-            multiplier: size.height / size.width
-        )
-        constraint.isActive = true
-        illustrationAspectRatioConstraint = constraint
     }
 
     func resumePlaying(animationState: AnimationState?) {
@@ -280,58 +249,5 @@ public class SlideCollectionViewCell: UICollectionViewCell {
 
     func pausePlaying() {
         illustrationAnimationViewContent?.pausePlaying()
-    }
-
-    override public func awakeFromNib() {
-        super.awakeFromNib()
-        constrainForegroundInsideSafeArea()
-    }
-
-    private func constrainForegroundInsideSafeArea() {
-        let safeArea = contentView.safeAreaLayoutGuide
-
-        for illustration in [illustrationAnimationView, illustrationImageView].compactMap({ $0 }) {
-            NSLayoutConstraint.activate([
-                illustration.leadingAnchor.constraint(
-                    greaterThanOrEqualTo: safeArea.leadingAnchor,
-                    constant: Layout.horizontalMargin
-                ),
-                illustration.trailingAnchor.constraint(
-                    lessThanOrEqualTo: safeArea.trailingAnchor,
-                    constant: -Layout.horizontalMargin
-                )
-            ])
-        }
-
-        if let illustrationContainer = illustrationAnimationView.superview, illustrationContainer !== contentView {
-            deactivateContentViewConstraints(involving: illustrationContainer, attributes: [.centerX])
-            illustrationContainer.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor).isActive = true
-        }
-
-        deactivateContentViewConstraints(involving: bottomView, attributes: [.leading, .trailing])
-        NSLayoutConstraint.activate([
-            bottomView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: Layout.horizontalMargin),
-            bottomView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -Layout.horizontalMargin)
-        ])
-    }
-
-    private func deactivateContentViewConstraints(involving view: UIView, attributes: Set<NSLayoutConstraint.Attribute>) {
-        for constraint in contentView.constraints
-            where (constraint.firstItem === view || constraint.secondItem === view)
-            && attributes.contains(constraint.firstAttribute)
-        {
-            constraint.isActive = false
-        }
-    }
-
-    func constrainBottomView(above pageIndicator: UIView, spacing: CGFloat = 24) {
-        guard bottomViewAbovePageIndicatorConstraint == nil else { return }
-
-        let constraint = bottomView.bottomAnchor.constraint(
-            lessThanOrEqualTo: pageIndicator.topAnchor,
-            constant: -spacing
-        )
-        constraint.isActive = true
-        bottomViewAbovePageIndicatorConstraint = constraint
     }
 }
