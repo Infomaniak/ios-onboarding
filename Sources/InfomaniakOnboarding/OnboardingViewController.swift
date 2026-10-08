@@ -93,9 +93,9 @@ public class OnboardingViewController: UIViewController {
             headerImageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 headerImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-                headerImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                headerImageView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 48),
-                headerImageView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -48)
+                headerImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+                headerImageView.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor),
+                headerImageView.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor)
             ])
         }
 
