@@ -18,13 +18,14 @@
 
 import SwiftUI
 
-public struct OnboardingConfiguration: Sendable {
+@MainActor
+public struct OnboardingConfiguration {
     /// The image displayed at the top of the view, usually the app logo
-    public let headerImage: UIImage?
+    public let headerImage: Image?
     /// The slides to be displayed
     public let slides: [Slide]
-    /// Custom color for the page indicator
-    public let pageIndicatorColor: UIColor?
+    /// Custom color for the current page indicator
+    public let pageIndicatorColor: Color?
     /// Allow or not the slides to scroll
     public let isScrollEnabled: Bool
     /// Show or hide points on slides
@@ -32,15 +33,15 @@ public struct OnboardingConfiguration: Sendable {
 
     /// Action to perform when the close button is tapped
     /// The button is only displayed when the handler is not nil
-    public let dismissHandler: (@Sendable () -> Void)?
+    public let dismissHandler: (() -> Void)?
 
     public init(
-        headerImage: UIImage?,
+        headerImage: Image? = nil,
         slides: [Slide],
-        pageIndicatorColor: UIColor?,
-        isScrollEnabled: Bool,
-        dismissHandler: (@Sendable () -> Void)?,
-        isPageIndicatorHidden: Bool
+        pageIndicatorColor: Color? = nil,
+        isScrollEnabled: Bool = true,
+        dismissHandler: (() -> Void)? = nil,
+        isPageIndicatorHidden: Bool = false
     ) {
         self.headerImage = headerImage
         self.slides = slides
