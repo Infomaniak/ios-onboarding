@@ -20,6 +20,10 @@ import SwiftUI
 
 public enum SlideContent: Sendable {
     case illustration(Image)
+    /// Use Airbnb's rendering engine for Lottie animations (json & dotLottie V1)
+    case animation(IKLottieConfiguration)
+    /// Use DotLottie's rendering engine for dotLottie V1/2 animations
+    case dotLottieAnimation(IKDotLottieConfiguration)
 }
 
 @MainActor

@@ -16,6 +16,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import DotLottie
 import SwiftUI
 
 struct SlideIllustrationView: View {
@@ -28,6 +29,40 @@ struct SlideIllustrationView: View {
             image
                 .resizable()
                 .scaledToFit()
+        case .animation(let configuration):
+            LottieSlideAnimationView(configuration: configuration, isPlaying: isCurrent)
+                .id(LottieAnimationId(configuration: configuration))
+        case .dotLottieAnimation(let configuration):
+            DotLottieSlideAnimationView(configuration: configuration, isPlaying: isCurrent)
+                .id(DotLottieAnimationId(configuration: configuration))
         }
+    }
+}
+
+/// Recreates the Lottie view and resets its playback phase when the animation source changes
+private struct LottieAnimationId: Hashable {
+    let filename: String
+    let bundlePath: String
+    let isDotLottie: Bool
+
+    init(configuration: IKLottieConfiguration) {
+        filename = configuration.filename
+        bundlePath = configuration.bundle.bundlePath
+        isDotLottie = configuration.animationType == .dotLottie
+    }
+}
+
+/// Recreates the DotLottie player when the configuration changes, since `StateObject` is only initialized once per identity
+private struct DotLottieAnimationId: Hashable {
+    let filename: String
+    let bundlePath: String
+    let isLooping: Bool
+    let mode: Mode
+
+    init(configuration: IKDotLottieConfiguration) {
+        filename = configuration.filename
+        bundlePath = configuration.bundle.bundlePath
+        isLooping = configuration.isLooping
+        mode = configuration.mode
     }
 }
