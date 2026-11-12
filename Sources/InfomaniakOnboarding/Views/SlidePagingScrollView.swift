@@ -40,6 +40,7 @@ struct SlidePagingScrollView: View {
                 }
             }
             .scrollTargetLayout()
+            .scrollBounceDisabled()
         }
         .scrollIndicators(.hidden)
         .scrollTargetBehavior(.paging)

@@ -60,6 +60,11 @@ struct PagingScrollViewConfiguratorView: UIViewRepresentable {
             var ancestor = superview
             while let view = ancestor {
                 if let scrollView = view as? UIScrollView, scrollView.isPagingEnabled {
+                    scrollView.bounces = false
+                    scrollView.contentInsetAdjustmentBehavior = .never
+                    if #available(iOS 26.0, *) {
+                        scrollView.topEdgeEffect.isHidden = true
+                    }
                     scrollView.isScrollEnabled = isScrollEnabled
                     return
                 }
