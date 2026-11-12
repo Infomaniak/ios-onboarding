@@ -18,7 +18,6 @@
 
 @preconcurrency import DotLottie
 import Foundation
-import UIKit
 
 public struct IKDotLottieConfiguration: Sendable {
     public let filename: String
