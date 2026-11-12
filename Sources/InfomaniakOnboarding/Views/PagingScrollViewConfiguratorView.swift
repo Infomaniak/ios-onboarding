@@ -22,6 +22,7 @@ import UIKit
 
 /// Configures the paging scroll view backing the enclosing page `TabView`, used before iOS 17.
 /// `scrollDisabled` has no effect on a page `TabView`, so swiping is toggled on that scroll view.
+/// Its bounce is disabled, so the first and last slides can't be dragged past the edges.
 struct PagingScrollViewConfiguratorView: UIViewRepresentable {
     let isScrollEnabled: Bool
 
@@ -62,6 +63,11 @@ struct PagingScrollViewConfiguratorView: UIViewRepresentable {
             var ancestor = superview
             while let view = ancestor {
                 if let scrollView = view as? UIScrollView, scrollView.isPagingEnabled {
+                    scrollView.bounces = false
+                    scrollView.contentInsetAdjustmentBehavior = .never
+                    if #available(iOS 26.0, *) {
+                        scrollView.topEdgeEffect.isHidden = true
+                    }
                     scrollView.isScrollEnabled = isScrollEnabled
                     return
                 }
