@@ -21,120 +21,101 @@ import Lottie
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        OnboardingView()
-            .ignoresSafeArea()
-    }
-}
+    @State private var selectedSlide = 0
 
-struct OnboardingView: UIViewControllerRepresentable {
-    @State var selectedSlide = 0
-
-    func makeUIViewController(context: Context) -> OnboardingViewController {
-        let slides: [Slide] = [
-            Slide(
-                backgroundImage: .onboardingBackground1,
-                backgroundImageTintColor: nil,
-                content: .animation(IKLottieConfiguration(id: 1,
-                                                          filename: "illu_onboarding_1",
-                                                          bundle: .main,
-                                                          loopFrameStart: 54,
-                                                          loopFrameEnd: 138,
-                                                          lottieConfiguration: LottieConfiguration(
-                                                              renderingEngine: .mainThread
-                                                          ))),
-                bottomView: Text("Choisissez votre thème")
-            ),
-            Slide(
-                backgroundImage: .onboardingBackground2,
-                backgroundImageTintColor: nil,
-                content: .animation(IKLottieConfiguration(
-                    id: 2,
-                    filename: "illu_onboarding_2",
-                    bundle: .main,
-                    loopFrameStart: 108,
-                    loopFrameEnd: 253,
-                    lottieConfiguration: LottieConfiguration(renderingEngine: .mainThread)
-                )),
-                bottomView: VStack {
-                    Text("Gagnez du temps avec les actions de balayage")
-                    Text("Personnalisez librement vos raccourcis dans les paramètres de l'app.")
-                }
-            ),
-            Slide(
-                backgroundImage: .onboardingBackground3,
-                backgroundImageTintColor: nil,
-                content: .animation(IKLottieConfiguration(
-                    id: 3,
-                    filename: "illu_onboarding_3",
-                    bundle: .main,
-                    loopFrameStart: 111,
-                    loopFrameEnd: 187,
-                    lottieConfiguration: LottieConfiguration(renderingEngine: .mainThread)
-                )),
-                bottomView: VStack {
-                    Text("Appuyez quelques secondes sur un message pour en sélectionner plusieurs")
-                    Text("Archivez, supprimez, déplacez ou mettez en favoris plusieurs messages en une fois.")
-                }
-            ),
-            Slide(
-                backgroundImage: .onboardingBackground4,
-                backgroundImageTintColor: nil,
-                content: .animation(IKLottieConfiguration(
-                    id: 4,
-                    filename: "illu_onboarding_4",
-                    bundle: .main,
-                    loopFrameStart: 127,
-                    loopFrameEnd: 236,
-                    lottieConfiguration: LottieConfiguration(renderingEngine: .mainThread)
-                )),
-                bottomView: VStack {
-                    Text("Lancez vous !")
-                    Text("Créez une adresse gratuite ou connectez-vous à un compte Infomaniak existant.")
-                }
-            )
-        ]
-
-        let configuration = OnboardingConfiguration(
-            headerImage: .logoText,
-            slides: slides,
-            pageIndicatorColor: UIColor(Color.accentColor),
-            isScrollEnabled: true,
-            dismissHandler: {},
-            isPageIndicatorHidden: true
-        )
-
-        let controller = OnboardingViewController(configuration: configuration)
-        controller.delegate = context.coordinator
-        return controller
-    }
-
-    func updateUIViewController(_ uiViewController: OnboardingViewController, context: Context) {
-        uiViewController.setSelectedSlide(index: selectedSlide)
-    }
-
-    func makeCoordinator() -> Coordinator {
-        return Coordinator()
-    }
-
-    class Coordinator: OnboardingViewControllerDelegate {
-        func currentIndexChanged(newIndex: Int) {}
-
-        func willDisplaySlideViewCell(_ slideViewCell: SlideCollectionViewCell, at index: Int) {}
-
-        func bottomViewForIndex(_ index: Int) -> (any View)? {
-            if index == 3 {
-                return Text("Last")
-            } else {
-                return Text("Coucou")
+    private let slides: [Slide] = [
+        Slide(
+            backgroundImage: Image("onboarding-background-1"),
+            content: .animation(IKLottieConfiguration(
+                id: 1,
+                filename: "illu_onboarding_1",
+                bundle: .main,
+                loopFrameStart: 54,
+                loopFrameEnd: 138,
+                lottieConfiguration: LottieConfiguration(renderingEngine: .mainThread)
+            ))
+        ) {
+            Text("Choisissez votre thème")
+        },
+        Slide(
+            backgroundImage: Image("onboarding-background-2"),
+            content: .animation(IKLottieConfiguration(
+                id: 2,
+                filename: "illu_onboarding_2",
+                bundle: .main,
+                loopFrameStart: 108,
+                loopFrameEnd: 253,
+                lottieConfiguration: LottieConfiguration(renderingEngine: .mainThread)
+            ))
+        ) {
+            VStack {
+                Text("Gagnez du temps avec les actions de balayage")
+                Text("Personnalisez librement vos raccourcis dans les paramètres de l'app.")
+            }
+        },
+        Slide(
+            backgroundImage: Image("onboarding-background-3"),
+            content: .animation(IKLottieConfiguration(
+                id: 3,
+                filename: "illu_onboarding_3",
+                bundle: .main,
+                loopFrameStart: 111,
+                loopFrameEnd: 187,
+                lottieConfiguration: LottieConfiguration(renderingEngine: .mainThread)
+            ))
+        ) {
+            VStack {
+                Text("Appuyez quelques secondes sur un message pour en sélectionner plusieurs")
+                Text("Archivez, supprimez, déplacez ou mettez en favoris plusieurs messages en une fois.")
+            }
+        },
+        Slide(
+            backgroundImage: Image("onboarding-background-4"),
+            content: .animation(IKLottieConfiguration(
+                id: 4,
+                filename: "illu_onboarding_4",
+                bundle: .main,
+                loopFrameStart: 127,
+                loopFrameEnd: 236,
+                lottieConfiguration: LottieConfiguration(renderingEngine: .mainThread)
+            ))
+        ) {
+            VStack {
+                Text("Lancez vous !")
+                Text("Créez une adresse gratuite ou connectez-vous à un compte Infomaniak existant.")
             }
         }
+    ]
 
-        func shouldAnimateBottomViewForIndex(_ index: Int) -> Bool {
-            if index == 3 {
-                return true
+    private var configuration: OnboardingConfiguration {
+        OnboardingConfiguration(
+            headerImage: Image("logo-text"),
+            slides: slides,
+            pageIndicatorColor: .accentColor,
+            isScrollEnabled: true,
+            dismissHandler: {},
+            isPageIndicatorHidden: false
+        )
+    }
+
+    private var lastSlideIndex: Int {
+        slides.count - 1
+    }
+
+    var body: some View {
+        OnboardingCarouselView(
+            configuration: configuration,
+            selectedSlide: $selectedSlide,
+            shouldAnimateBottomViewForIndex: { $0 == lastSlideIndex }
+        ) { index in
+            if index == lastSlideIndex {
+                Button("Commencer") {}
+                    .buttonStyle(.borderedProminent)
             } else {
-                return false
+                Button("Suivant") {
+                    selectedSlide += 1
+                }
+                .buttonStyle(.borderedProminent)
             }
         }
     }
