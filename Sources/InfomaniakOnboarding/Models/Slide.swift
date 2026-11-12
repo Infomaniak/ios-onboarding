@@ -16,50 +16,47 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Lottie
 import SwiftUI
-import UIKit
 
-public enum SlideContent {
-    case illustration(UIImage)
-    /// Use Airbnb's rendering engine for Lottie animations (json & dotLottie V1)
-    case animation(IKLottieConfiguration)
-    /// Use DotLottie's rendering engine for dotLottie V1/2 animations
-    case dotLottieAnimation(IKDotLottieConfiguration)
+public enum SlideContent: Sendable {
+    case illustration(Image)
 }
 
 @MainActor
 public struct Slide {
     /// An image displayed behind the main illustration (usually a wave)
-    public let backgroundImage: UIImage
-    /// The color to apply to the background image
-    public let backgroundImageTintColor: UIColor?
+    public let backgroundImage: Image
+    /// The color to apply to the background image.
+    /// When not nil, the image is rendered as a template and tinted with this color.
+    public let backgroundImageTintColor: Color?
     /// The main content displayed either a Lottie animation or an image
     public let content: SlideContent
     /// The view displayed directly under the illustration
-    public let bottomViewController: UIViewController
+    public let bottomView: AnyView
 
     public init(
-        backgroundImage: UIImage,
-        backgroundImageTintColor: UIColor?,
-        content: SlideContent,
-        bottomViewController: UIViewController
-    ) {
-        self.backgroundImage = backgroundImage
-        self.backgroundImageTintColor = backgroundImageTintColor
-        self.content = content
-        self.bottomViewController = bottomViewController
-    }
-
-    public init(
-        backgroundImage: UIImage,
-        backgroundImageTintColor: UIColor?,
+        backgroundImage: Image,
+        backgroundImageTintColor: Color? = nil,
         content: SlideContent,
         bottomView: some View
     ) {
         self.backgroundImage = backgroundImage
         self.backgroundImageTintColor = backgroundImageTintColor
         self.content = content
-        bottomViewController = UIHostingController(rootView: bottomView)
+        self.bottomView = AnyView(bottomView)
+    }
+
+    public init(
+        backgroundImage: Image,
+        backgroundImageTintColor: Color? = nil,
+        content: SlideContent,
+        @ViewBuilder bottomView: () -> some View
+    ) {
+        self.init(
+            backgroundImage: backgroundImage,
+            backgroundImageTintColor: backgroundImageTintColor,
+            content: content,
+            bottomView: bottomView()
+        )
     }
 }
