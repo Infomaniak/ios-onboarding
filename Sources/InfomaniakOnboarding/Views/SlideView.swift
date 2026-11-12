@@ -20,10 +20,11 @@ import SwiftUI
 
 struct SlideView: View {
     let slide: Slide
+    let isCurrent: Bool
 
     var body: some View {
         VStack {
-            SlideIllustrationView(content: slide.content)
+            SlideIllustrationView(content: slide.content, isCurrent: isCurrent)
                 .frame(maxWidth: OnboardingLayout.illustrationMaxWidth)
                 .padding(.top, OnboardingLayout.Padding.large)
                 .frame(maxWidth: .infinity)
@@ -50,6 +51,7 @@ struct SlideView: View {
             content: .illustration(Image(systemName: "envelope.fill"))
         ) {
             Text(verbatim: "Preview")
-        }
+        },
+        isCurrent: true
     )
 }
