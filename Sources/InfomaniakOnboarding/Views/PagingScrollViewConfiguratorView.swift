@@ -21,6 +21,7 @@ import UIKit
 
 /// Configures the paging scroll view backing the enclosing page `TabView`.
 /// Swiping is toggled on that scroll view only: `scrollDisabled` or a blocking gesture would also apply to the slides' bottom views.
+/// Its bounce is disabled, so the first and last slides can't be dragged past the edges.
 struct PagingScrollViewConfiguratorView: UIViewRepresentable {
     let isScrollEnabled: Bool
 
@@ -61,6 +62,7 @@ struct PagingScrollViewConfiguratorView: UIViewRepresentable {
             var ancestor = superview
             while let view = ancestor {
                 if let scrollView = view as? UIScrollView, scrollView.isPagingEnabled {
+                    scrollView.bounces = false
                     scrollView.isScrollEnabled = isScrollEnabled
                     return
                 }
