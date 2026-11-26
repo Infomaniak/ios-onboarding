@@ -18,7 +18,7 @@
 
 import Foundation
 @preconcurrency import Lottie
-import UIKit
+import SwiftUI
 
 public struct IKLottieConfiguration: Sendable {
     public enum AnimationType: Sendable {
@@ -31,10 +31,11 @@ public struct IKLottieConfiguration: Sendable {
     public let bundle: Bundle
     public let animationType: AnimationType
     public let loopMode: LottieLoopMode
-    public let contentMode: UIView.ContentMode
+    public let contentMode: ContentMode
     public let loopFrameStart: Int?
     public let loopFrameEnd: Int?
     public let lottieConfiguration: LottieConfiguration
+    public let colors: [IKLottieColor]
 
     public init(
         id: Int,
@@ -42,10 +43,11 @@ public struct IKLottieConfiguration: Sendable {
         bundle: Bundle,
         animationType: AnimationType = .json,
         loopMode: LottieLoopMode = .playOnce,
-        contentMode: UIView.ContentMode = UIView.ContentMode.scaleAspectFit,
+        contentMode: ContentMode = .fit,
         loopFrameStart: Int? = nil,
         loopFrameEnd: Int? = nil,
-        lottieConfiguration: LottieConfiguration = LottieConfiguration()
+        lottieConfiguration: LottieConfiguration = LottieConfiguration(),
+        colors: [IKLottieColor] = []
     ) {
         self.id = id
         self.filename = filename
@@ -56,5 +58,6 @@ public struct IKLottieConfiguration: Sendable {
         self.loopFrameStart = loopFrameStart
         self.loopFrameEnd = loopFrameEnd
         self.lottieConfiguration = lottieConfiguration
+        self.colors = colors
     }
 }
